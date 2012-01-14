@@ -15,10 +15,10 @@ class StatusPage(Resource):
 
 def main():
     parser = argparse.ArgumentParser(description='Run an instance of balbec.')
-    parser.add_argument('--port', dest='www_port', default="8880", help='Port for the webserver')
+    parser.add_argument('--port', dest='www_port', default=8880, help='Port for the webserver')
     args = parser.parse_args()
 
     resource = StatusPage()
     factory = Site(resource)
-    reactor.listenTCP(args.www_port, factory)
+    reactor.listenTCP(int(args.www_port), factory)
     reactor.run()
