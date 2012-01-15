@@ -6,9 +6,20 @@ Nagios visualization tool.
 
 .. image:: http://kristianoellegaard.github.com/python-nagios-frontend/ipad-mockup.jpg
 
-Configuration:
+Install using pip
+---------------------
 
-- The configuration is defined as xml in "/opt/balbec/config.xml".
+pip install python-nagios-frontend
+
+Install using puppet
+------------------------
+https://github.com/dploi/dploi-puppet/blob/master/nagios/manifests/frontend.pp
+
+
+Configuration
+-------------
+
+- The configuration is defined as xml in "/etc/python-nagios-frontend/config.xml".
 - Notes for the mk livestatus support 
   (http://mathias-kettner.de/checkmk_livestatus.html):
   The livestatus socket is created with 0660 rights, with nagios user and group
