@@ -12,7 +12,7 @@
 		.map { border-bottom: 1px dashed #444; padding: 5px 5px 10px 5px; margin: 0; }
 		.map_title { margin: 5px 0 5px 10px; }
 		.map_title span { color: #bbb; }
-		.host { display: inline-block; background: #333; border: 1px solid #555; border-radius: 5px; padding: 8px 10px; margin: 5px; }
+		.host { display: inline-block; background: #333; border: 1px solid #555; border-bottom-width: 6px; border-radius: 5px; padding: 8px 10px; margin: 5px; }
 		.host h2 { margin: 0 0 5px 0; text-shadow: 1px 1px 0px #000; }
 		.host h2 a { visibility: hidden; }
 		.host h2:hover a { visibility: visible; }
@@ -23,12 +23,15 @@
 		.service.code-0 { background: #3a3; border-color: #6c6; color: #fff; }
 		.service.code-1 { background: #f33; border-color: #f66; color: #fff; box-shadow: 0px 0px 5px #f66; }
 		.service.code-2 { background: #ff3; border-color: #ff6; color: #222; box-shadow: 0px 0px 5px #ff6; }
-		#tooltip { position: fixed; top: 0; right: 20px; color: #888; padding: 10px 10px 5px 10px; background: #333; border: 1px solid #444;
-			border-top: none; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
+		#tooltip { position: fixed; top: 0; right: 20px; color: #888; background: #333; border: 1px solid #444;
+			border-top: none; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; overflow: hidden; }
+		#tooltip .wrap { padding: 10px 10px 5px 10px; }
 		#tooltip p { margin: 0; font-size: 12px; }
-		#tooltip .update { font-weight: bold; color: #aaa; }
+		#tooltip .updater { font-weight: bold; color: #aaa; }
 		#tooltip.warning { background: #611; border-color: #822; box-shadow: 0px 0px 15px #822; color: #ddd; }
-		#tooltip .loader { height: 7px; margin: 5px 0 0 0; background: #444; color: #444; overflow: hidden; }
+		#tooltip.warning .updater { color: #fff; }
+		#tooltip .loader { height: 5px; background: #444; color: #444; overflow: hidden;
+			border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
 		#tooltip.warning .loader { background: #822; color: #822; }
 	</style>
 </head>
@@ -38,7 +41,9 @@
 	<p>No data available!</p>
 </div>
 <div id="tooltip" class="align-right">
-	<p>Last update was <span class="updater"></span> minutes ago.</p>
+	<div class="wrap">
+		<p>Last update was <span class="updater"></span> minutes ago.</p>
+	</div>
 	<div class="loader">0</div>
 </div>
 
@@ -47,7 +52,7 @@
 <script type="text/javascript">
 	var Dx = {};
 	Dx.REFRESH_RATE = 30 * 1000; // how often should the page check for updates (in milliseconds)
-	Dx.LOADER_RATE = 200; // loader refresh rate (in milliseconds)
+	Dx.LOADER_RATE = 100; // loader refresh rate (in milliseconds)
 	Dx.MAX_TIME_DIFF = 5 * 60 * 1000; // at what time difference should a warning be displayed (in milliseconds)
 	Dx.content = $('#content'); // container to be replaced with content
 	Dx.tooltip = $('#tooltip'); // container that displays time related info
