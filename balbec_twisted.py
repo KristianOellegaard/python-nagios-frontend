@@ -3,7 +3,6 @@ from twisted.internet import reactor
 from twisted.web.server import Site
 from twisted.web.resource import Resource
 import os
-from balbec.htmlhandler import HtmlHandler
 from balbec.jsonhandler import JSONHandler
 from balbec.xmlhandler import XmlHandler
 
@@ -19,8 +18,7 @@ class StatusPage(Resource):
             handler = JSONHandler(CWD)
             output = handler.json()
         else:
-            handler = HtmlHandler(CWD)
-            output = handler.html()
+            output = open(os.path.join(CWD, "static/index.html")).read()
         return output
 
 def main():
