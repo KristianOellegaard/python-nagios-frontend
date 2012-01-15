@@ -4,26 +4,28 @@
 	<meta charset="utf-8" />
 	<title>Dashboard</title>
 	<style type="text/css">
-		body { font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif; font-size: 13px; color: #fff; background: #000; }
+		body { font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif; font-size: 13px; color: #fff; background: #000; margin: 0; }
 		h1,h2,h3,h4,h5,h6 { color: #fff; font-weight: normal; }
 		a { color: #ccc; text-decoration: none; font-weight: normal; }
 		a:hover { color: #fff; }
-		.map_title { margin: 15px 0 5px 10px; }
+		.align-right { text-align: right; }
+		.map { border-bottom: 1px dashed #444; padding: 5px 5px 10px 5px; margin: 0; }
+		.map_title { margin: 5px 0 5px 10px; }
 		.map_title span { color: #bbb; }
-		.host { display: inline-block; background: #333; border: 1px solid #555; border-radius: 5px; padding: 8px; margin: 5px; }
+		.host { display: inline-block; background: #333; border: 1px solid #555; border-radius: 5px; padding: 8px 10px; margin: 5px; }
 		.host h2 { margin: 0 0 5px 0; text-shadow: 1px 1px 0px #000; }
 		.host h2 a { visibility: hidden; }
 		.host h2:hover a { visibility: visible; }
-		.host.code-0 { background: #333; border-color: #555; }
+		.host.code-0 { background: #232; border-color: #151; box-shadow: 0px 0px 10px #262; }
 		.host.code-1 { background: #611; border-color: #822; box-shadow: 0px 0px 15px #822; }
 		.host.code-2 { background: #661; border-color: #882; box-shadow: 0px 0px 5px #882; }
 		.service { display: inline-block; padding: 2px 5px; margin: 2px 2px; background: #333; border: 1px solid #666; color: #fff; border-radius: 5px; }
 		.service.code-0 { background: #3a3; border-color: #6c6; color: #fff; }
 		.service.code-1 { background: #f33; border-color: #f66; color: #fff; box-shadow: 0px 0px 5px #f66; }
 		.service.code-2 { background: #ff3; border-color: #ff6; color: #222; box-shadow: 0px 0px 5px #ff6; }
-		#timer { position: fixed; top: 0; right: 20px; color: #888; padding: 10px 10px 5px 10px; background: #333; border: 1px solid #555;
+		#tooltip { position: fixed; top: 0; right: 20px; color: #999; padding: 10px 10px 5px 10px; background: #333; border: 1px solid #444;
 			border-top: none; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
-		#timer p { margin: 0; }
+		#tooltip p { margin: 0; }
 	</style>
 </head>
 <body>
@@ -31,8 +33,9 @@
 <div id="content">
 	<p>No data available!</p>
 </div>
-<div id="timer">
-	<p>Refreshed <span class="refresh"></span> seconds ago.</p>
+<div id="tooltip" class="align-right">
+	<p>Updated at <span class="update"></span></p>
+	<p>Refreshed <span class="refresh"></span> seconds ago</p>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -64,8 +67,9 @@
 			headers: { "Accept": "application/json" },
 			dataType: 'json',
 			success: function (data) {
-				//console.log(data);
-				content.html(parseData(data));
+				console.log(data);
+				content.html(parseData(data.maps));
+				setLastUpdate(data.updated_at);
 				resetTimer();
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
@@ -73,19 +77,30 @@
 			}
 		});
 	}
-	function timer() {
-		var timer = $('#timer .refresh');
+	function setLastUpdate(unixtime) {
+		var date = new Date(unixtime*1000);
+		var update = $('#tooltip .update');
+		date = pad(date.getHours(), 2)+':'+pad(date.getMinutes(), 2)+':'+pad(date.getSeconds(), 2)+', '+pad(date.getDate(), 2)+'.'+pad((date.getMonth()+1), 2)+'.'+date.getFullYear();
+		update.html(date);
+	}
+	function increaseTimer() {
+		var timer = $('#tooltip .refresh');
 		if (timer.html().length < 1) timer.html(-1);
 		timer.html(parseInt(timer.html())+1);
 	}
 	function resetTimer() {
-		var timer = $('#timer');
-		timer.find('.refresh').html(0);
+		var timer = $('#tooltip .refresh');
+		timer.html(0);
+	}
+	function pad(num, size) {
+		var s = num+"";
+		while (s.length < size) s = "0" + s;
+		return s;
 	}
 	$(function(){
 		update();
 		setInterval(update, 30 * 1000); // update every 30 seconds
-		setInterval(timer, 1 * 1000);
+		setInterval(increaseTimer, 1 * 1000);
 	});
 </script>
 </body>
