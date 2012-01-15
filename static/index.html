@@ -67,7 +67,7 @@
 			headers: { "Accept": "application/json" },
 			dataType: 'json',
 			success: function (data) {
-				console.log(data);
+				//console.log(data);
 				content.html(parseData(data.maps));
 				setLastUpdate(data.updated_at);
 				resetTimer();
