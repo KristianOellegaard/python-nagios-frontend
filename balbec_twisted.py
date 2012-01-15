@@ -15,7 +15,7 @@ class StatusPage(Resource):
         if request.received_headers["accept"] == "text/xml":
             handler = XmlHandler(CWD)
             output = handler.xml()
-        elif request.received_headers["accept"] == "text/json":
+        elif request.received_headers["accept"] == "application/json":
             handler = JSONHandler(CWD)
             output = handler.json()
         else:
