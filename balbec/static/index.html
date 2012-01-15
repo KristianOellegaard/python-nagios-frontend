@@ -96,11 +96,13 @@
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				console.log('Error: '+textStatus);
+				setLastUpdate(false);
+				resetTimer();
 			}
 		});
 	}
 	function setLastUpdate(unixtime) {
-		Dx.last_update = new Date(unixtime*1000);
+		if (unixtime) Dx.last_update = new Date(unixtime*1000);
 		var formatted_date = pad(Dx.last_update.getHours(), 2)+':'+pad(Dx.last_update.getMinutes(), 2)+':'+
 				pad(Dx.last_update.getSeconds(), 2)+', '+pad(Dx.last_update.getDate(), 2)+'.'+
 				pad((Dx.last_update.getMonth()+1), 2)+'.'+Dx.last_update.getFullYear();
