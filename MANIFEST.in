@@ -1,0 +1,4 @@
+include LICENSE
+include README
+recursive-include balbec/static/ *
+recursive-include balbec/schema/ *

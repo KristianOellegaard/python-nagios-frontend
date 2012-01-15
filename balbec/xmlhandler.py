@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from lxml import etree
+import os
 import re
 import datetime
 from balbec.objects import Map, Hostgroup, Operation, GroupObject
@@ -19,6 +20,8 @@ SERVICE_UNKNOWN = 3
 hostStatus = {HOST_UP : "Up", HOST_DOWN : "Down", HOST_UNREACHABLE : "Unreachable", HOST_UNREACHABLE_2 : "Unreachable"}
 serviceStatus = {SERVICE_OK : "Ok", SERVICE_WARNING : "Warning", SERVICE_CRITICAL : "Critical", SERVICE_UNKNOWN : "Unknown"}
 
+ROOT = lambda base : os.path.join(os.path.dirname(__file__), base).replace('\\','/')
+
 class XmlHandler:
 
     def __init__(self, documentRoot):
@@ -29,34 +32,17 @@ class XmlHandler:
 
         maps = []
 
-        schemaFile = open(self.documentRoot+'/schema/config.xsd', 'r')
+        schemaFile = open(ROOT("schema/config.xsd"), 'r')
         schemaDoc = etree.parse(schemaFile)
         schema = etree.XMLSchema(schemaDoc)
 
-        configFile = open(self.documentRoot+'/config.xml', 'r')
+        configFile = open(os.path.join(self.documentRoot, 'config.xml'), 'r')
         try:
             doc = etree.parse(configFile)
             schema.assertValid(doc)
         except etree.XMLSyntaxError, e:
            
             raise Exception('Invalid Config file: "'+str(e)+'"')
-        except etree.DocumentInvalid, e:
-
-            schemaFile = open(self.documentRoot+'/schema/old_config.xsd', 'r')
-            schemaDoc = etree.parse(schemaFile)
-            schema = etree.XMLSchema(schemaDoc)
-
-            try: 
-
-                schema.assertValid(doc)
-
-                stylesheetFile = open(self.documentRoot+'/xslt/old_config.xsl', 'r')
-                stylesheetDoc = etree.parse(stylesheetFile)
-                stylesheet = etree.XSLT(stylesheetDoc)
-                doc = stylesheet(doc)
-            except:
-
-                raise Exception('Invalid Config file: "'+str(e)+'"')
 
         mysqlNodes = doc.xpath("/balbec/nagios/ndo2db")
         filesNodes = doc.xpath("/balbec/nagios/files")
