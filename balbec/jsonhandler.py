@@ -39,7 +39,9 @@ class JSONHandler(XmlHandler):
         lastCheck = dt.strftime('%s')
         dt = backend.getCurrentDateTime()
         currentTime=dt.strftime('%s')
-        json_dict = []
+        json_dict = {}
+        json_dict["updated_at"] = lastCheck
+        json_dict["maps"] = []
         for map in maps:
             groups = self.getFilteredGroups(backend, map.expression)
             group_list = []
@@ -88,5 +90,5 @@ class JSONHandler(XmlHandler):
                         host_dict[group_dict["type"]].append(service_dict)
                     group_dict["hosts"].append(host_dict)
                 group_list.append(group_dict)
-            json_dict.append({'name': map.name, 'groups': group_list})
+            json_dict["maps"].append({'name': map.name, 'groups': group_list})
         return json.dumps(json_dict)
