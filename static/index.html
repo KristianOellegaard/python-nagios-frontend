@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Dashboard</title>
+	<style type="text/css">
+		body { font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif; font-size: 13px; color: #fff; background: #000; }
+		h1,h2,h3,h4,h5,h6 { color: #fff; font-weight: normal; }
+		a { color: #ccc; text-decoration: none; font-weight: normal; }
+		a:hover { color: #fff; }
+		.map_title { margin: 15px 0 5px 10px; }
+		.map_title span { color: #bbb; }
+		.host { display: inline-block; background: #333; border: 1px solid #555; border-radius: 5px; padding: 8px; margin: 5px; }
+		.host h2 { margin: 0 0 5px 0; text-shadow: 1px 1px 0px #000; }
+		.host h2 a { visibility: hidden; }
+		.host h2:hover a { visibility: visible; }
+		.host.code-0 { background: #333; border-color: #555; }
+		.host.code-1 { background: #611; border-color: #822; box-shadow: 0px 0px 15px #822; }
+		.host.code-2 { background: #661; border-color: #882; box-shadow: 0px 0px 5px #882; }
+		.service { display: inline-block; padding: 2px 5px; margin: 2px 2px; background: #333; border: 1px solid #666; color: #fff; border-radius: 5px; }
+		.service.code-0 { background: #3a3; border-color: #6c6; color: #fff; }
+		.service.code-1 { background: #f33; border-color: #f66; color: #fff; box-shadow: 0px 0px 5px #f66; }
+		.service.code-2 { background: #ff3; border-color: #ff6; color: #222; box-shadow: 0px 0px 5px #ff6; }
+		#timer { position: fixed; top: 0; right: 20px; color: #888; padding: 10px 10px 5px 10px; background: #333; border: 1px solid #555;
+			border-top: none; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
+		#timer p { margin: 0; }
+	</style>
+</head>
+<body>
+
+<div id="content">
+	<p>No data available!</p>
+</div>
+<div id="timer">
+	<p>Refreshed <span class="refresh"></span> seconds ago.</p>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/jquery.min.js"><\/script>')</script>
+<script type="text/javascript">
+	function parseData(data) {
+		var result = '';
+		$.each(data, function(map_key, map) {
+			if (map.groups.length) $.each(map.groups, function(group_key, group) {
+				result += '<div class="map">';
+				result += '<h1 class="map_title">'+map.name+'<span title="'+group.type+'"> - '+group.name+'</span></h1>';
+				if (group.hosts.length) $.each(group.hosts, function(host_key, host) {
+					result += '<div class="host code-'+host.code+'">';
+					result += '<h2>'+host.hostname+'</h2>';
+					if (host.hostgroup.length) $.each(host.hostgroup, function(service_key, service) {
+						result += '<span class="service code-'+service.code+'" title="'+service.text+'">'+service.servicename+'</span>';
+					});
+					result += '</div>';
+				});
+				result += '</div>';
+			});
+		});
+		return result;
+	}
+	function update() {
+		var content = $('#content');
+		$.ajax({
+			url: '/',
+			headers: { "Accept": "application/json" },
+			dataType: 'json',
+			success: function (data) {
+				//console.log(data);
+				content.html(parseData(data));
+				resetTimer();
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				console.log('Error: '+textStatus);
+			}
+		});
+	}
+	function timer() {
+		var timer = $('#timer .refresh');
+		if (timer.html().length < 1) timer.html(-1);
+		timer.html(parseInt(timer.html())+1);
+	}
+	function resetTimer() {
+		var timer = $('#timer');
+		timer.find('.refresh').html(0);
+	}
+	$(function(){
+		update();
+		setInterval(update, 30 * 1000); // update every 30 seconds
+		setInterval(timer, 1 * 1000);
+	});
+</script>
+</body>
+</html>
