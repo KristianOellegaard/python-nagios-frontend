@@ -23,9 +23,13 @@
 		.service.code-0 { background: #3a3; border-color: #6c6; color: #fff; }
 		.service.code-1 { background: #f33; border-color: #f66; color: #fff; box-shadow: 0px 0px 5px #f66; }
 		.service.code-2 { background: #ff3; border-color: #ff6; color: #222; box-shadow: 0px 0px 5px #ff6; }
-		#tooltip { position: fixed; top: 0; right: 20px; color: #999; padding: 10px 10px 5px 10px; background: #333; border: 1px solid #444;
+		#tooltip { position: fixed; top: 0; right: 20px; color: #888; padding: 10px 10px 5px 10px; background: #333; border: 1px solid #444;
 			border-top: none; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
-		#tooltip p { margin: 0; }
+		#tooltip p { margin: 0; font-size: 12px; }
+		#tooltip .update { font-weight: bold; color: #aaa; }
+		#tooltip.warning { background: #611; border-color: #822; box-shadow: 0px 0px 15px #822; color: #ddd; }
+		#tooltip .loader { height: 7px; margin: 5px 0 0 0; background: #444; color: #444; overflow: hidden; }
+		#tooltip.warning .loader { background: #822; color: #822; }
 	</style>
 </head>
 <body>
@@ -34,13 +38,27 @@
 	<p>No data available!</p>
 </div>
 <div id="tooltip" class="align-right">
-	<p>Updated at <span class="update"></span></p>
-	<p>Refreshed <span class="refresh"></span> seconds ago</p>
+	<p>Last update was <span class="updater"></span> minutes ago.</p>
+	<div class="loader">0</div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="/jquery.min.js"><\/script>')</script>
 <script type="text/javascript">
+	var Dx = {};
+	Dx.REFRESH_RATE = 30 * 1000; // how often should the page check for updates (in milliseconds)
+	Dx.LOADER_RATE = 200; // loader refresh rate (in milliseconds)
+	Dx.MAX_TIME_DIFF = 5 * 60 * 1000; // at what time difference should a warning be displayed (in milliseconds)
+	Dx.content = $('#content'); // container to be replaced with content
+	Dx.tooltip = $('#tooltip'); // container that displays time related info
+	Dx.loader = $('#tooltip .loader'); // container for the loader
+	Dx.updater = $('#tooltip .updater'); // container for the update time
+	Dx.last_update = new Date(0);
+	$(function(){
+		updateData();
+		setInterval(updateData, Dx.REFRESH_RATE);
+		setInterval(increaseLoader, Dx.LOADER_RATE);
+	});
 	function parseData(data) {
 		var result = '';
 		$.each(data, function(map_key, map) {
@@ -60,15 +78,14 @@
 		});
 		return result;
 	}
-	function update() {
-		var content = $('#content');
+	function updateData() {
 		$.ajax({
 			url: '/',
 			headers: { "Accept": "application/json" },
 			dataType: 'json',
 			success: function (data) {
 				//console.log(data);
-				content.html(parseData(data.maps));
+				Dx.content.html(parseData(data.maps));
 				setLastUpdate(data.updated_at);
 				resetTimer();
 			},
@@ -78,30 +95,31 @@
 		});
 	}
 	function setLastUpdate(unixtime) {
-		var date = new Date(unixtime*1000);
-		var update = $('#tooltip .update');
-		date = pad(date.getHours(), 2)+':'+pad(date.getMinutes(), 2)+':'+pad(date.getSeconds(), 2)+', '+pad(date.getDate(), 2)+'.'+pad((date.getMonth()+1), 2)+'.'+date.getFullYear();
-		update.html(date);
+		Dx.last_update = new Date(unixtime*1000);
+		var formatted_date = pad(Dx.last_update.getHours(), 2)+':'+pad(Dx.last_update.getMinutes(), 2)+':'+
+				pad(Dx.last_update.getSeconds(), 2)+', '+pad(Dx.last_update.getDate(), 2)+'.'+
+				pad((Dx.last_update.getMonth()+1), 2)+'.'+Dx.last_update.getFullYear();
+		var now = new Date();
+		var time_diff = now - Dx.last_update;
+		if (time_diff > Dx.MAX_TIME_DIFF) {
+			Dx.tooltip.addClass('warning');
+		}
+		Dx.updater.html(Math.ceil(time_diff/1000/60)); // minutes
+		Dx.updater.val('title', formatted_date);
 	}
-	function increaseTimer() {
-		var timer = $('#tooltip .refresh');
-		if (timer.html().length < 1) timer.html(-1);
-		timer.html(parseInt(timer.html())+1);
+	function increaseLoader() {
+		if (Dx.loader.html().length < 1) Dx.loader.html(0);
+		Dx.loader.html(parseInt(Dx.loader.html())+1);
+		Dx.loader.css('width', Math.min(parseInt(Dx.loader.html()) * Dx.LOADER_RATE * 100 / Dx.REFRESH_RATE, 100) + '%' );
 	}
 	function resetTimer() {
-		var timer = $('#tooltip .refresh');
-		timer.html(0);
+		Dx.loader.html(0);
 	}
 	function pad(num, size) {
 		var s = num+"";
 		while (s.length < size) s = "0" + s;
 		return s;
 	}
-	$(function(){
-		update();
-		setInterval(update, 30 * 1000); // update every 30 seconds
-		setInterval(increaseTimer, 1 * 1000);
-	});
 </script>
 </body>
 </html>
