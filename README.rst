@@ -1,60 +1,10 @@
-Balbec
+======================
+Python Nagios Frontend
+======================
 
 Nagios visualization tool.
 
-2011 Magnus Kulke
-
-Requirements:
-
-- nagios
-- python 2.4+
-- python-lxml
-
-Optional (When running Balbec on an apache server):
-
-- mod-wsgi for apache (when using apache, configuration example in "apache/")
-
-Optional (When Balbec is not installed on the Nagios host):
-
-- ndo2db with mysql (see the documentation included in ndoutils on how to set 
-  up NDO)
-- python-mysql
-
-Installation:
-
-- Standalone:
-
- - Move all files and directories to "/opt/balbec".	
- - Create a "balbec" link to the "src/" directory 
-   ("ln -s /opt/balbec/src /opt/balbec/balbec").
- - Ensure the "balbec-server.py" script is executable 
-   ("chmod +x /opt/balbec/balbec-server.py").
- - Run "balbec-server.py" in "/opt/balbec" 
-   ("cd /opt/balbec && python /opt/balbec/balbec-server.py"). 
-   The default port for the server is 8100. To make the server listen on another
-   port use the "-p" switch.
- - Also you can use the included init script:
-
-   cd /opt/balbec
-   cp init-script.sh /etc/init.d/balbec
-   chmod +x /etc/init.d/balbec
-   chkconfig balbec on
-   service balbec start
-
-- If you want to configure the port for the init script add a file 
-  "/etc/sysconfig/balbec" and set the "BALBEC_PORT" variable there:
-
-  echo "BALBEC_PORT=8102" > /etc/sysconfig/balbec
-
-- Apache:
-
- - If not yet present add a wsgi option "WSGIPythonPath /opt/wsgi" to the apache
-   configuration.
- - Create a "balbec" link to the "src/" directory in your wsgi directory 
-   ("ln -s /opt/balbec/src /opt/wsgi/balbec").
- - Move all files in "src/" to "/opt/wsgi/balbec".
- - Move "balbec.wsgi", "config.xml", "xslt/" & "schema/" to "/opt/balbec".
- - Adjust configuration in "config.xml".
+.. image:: http://kristianoellegaard.github.com/python-nagios-frontend/ipad-mockup.jpg
 
 Configuration:
 
