@@ -4,7 +4,7 @@
 	<meta charset="utf-8" />
 	<title>Dashboard</title>
 	<style type="text/css">
-		body { font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif; font-size: 13px; color: #fff; background: #000; margin: 0; }
+		body { font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif; font-size: 14px; color: #fff; background: #000; margin: 0; }
 		h1,h2,h3,h4,h5,h6 { color: #fff; font-weight: normal; }
 		a { color: #ccc; text-decoration: none; font-weight: normal; }
 		a:hover { color: #fff; }
@@ -17,12 +17,12 @@
 		.host h2 a { visibility: hidden; }
 		.host h2:hover a { visibility: visible; }
 		.host.code-0 { background: #232; border-color: #151; box-shadow: 0px 0px 10px #262; }
-		.host.code-2 { background: #611; border-color: #822; box-shadow: 0px 0px 15px #822; }
 		.host.code-1 { background: #661; border-color: #882; box-shadow: 0px 0px 5px #882; }
-		.service { display: inline-block; padding: 2px 5px; margin: 2px 2px; background: #333; border: 1px solid #666; color: #fff; border-radius: 5px; }
-		.service.code-0 { background: #3a3; border-color: #6c6; color: #fff; }
-		.service.code-2 { background: #f33; border-color: #f66; color: #fff; box-shadow: 0px 0px 5px #f66; }
+		.host.code-2 { background: #611; border-color: #822; box-shadow: 0px 0px 15px #822; }
+		.service { display: inline-block; padding: 2px 5px; margin: 2px 2px; background: #333; border: 1px solid #666; color: #fff; border-radius: 5px; font-weight: bold; }
+		.service.code-0 { background: #171; border-color: #3a3; color: #fff; }
 		.service.code-1 { background: #ff3; border-color: #ff6; color: #222; box-shadow: 0px 0px 5px #ff6; }
+		.service.code-2 { background: #f33; border-color: #f66; color: #fff; box-shadow: 0px 0px 5px #f66; }
 		#tooltip { position: fixed; top: 0; right: 20px; color: #888; background: #333; border: 1px solid #444;
 			border-top: none; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; overflow: hidden; }
 		#tooltip .wrap { padding: 10px 10px 5px 10px; }
@@ -33,6 +33,11 @@
 		#tooltip .loader { height: 5px; background: #444; color: #444; overflow: hidden;
 			border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
 		#tooltip.warning .loader { background: #822; color: #822; }
+		/* CSS3 Webkit Animations */
+		@-webkit-keyframes glow-service-1 { 0% { box-shadow: 0px 0px 5px #882; } 100% { box-shadow: 0px 0px 25px #882; } }
+		@-webkit-keyframes glow-service-2 { 0% { box-shadow: 0px 0px 5px #f66; } 100% { box-shadow: 0px 0px 25px #f66; } }
+		.service.code-1 { -webkit-animation-name: glow-service-1; -webkit-animation-duration: 1s; -webkit-animation-iteration-count: infinite; -webkit-animation-direction: alternate; -webkit-animation-timing-function: ease-in-out; }
+		.service.code-2 { -webkit-animation-name: glow-service-2;-webkit-animation-duration: 1s;-webkit-animation-iteration-count: infinite; -webkit-animation-direction: alternate; -webkit-animation-timing-function: ease-in-out;}
 	</style>
 </head>
 <body>
