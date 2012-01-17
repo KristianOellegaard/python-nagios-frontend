@@ -115,6 +115,8 @@
 		var time_diff = now - Dx.last_update;
 		if (time_diff > Dx.MAX_TIME_DIFF) {
 			Dx.tooltip.addClass('warning');
+		} else {
+			Dx.tooltip.removeClass('warning');
 		}
 		Dx.updater.html(Math.ceil(time_diff/1000/60)); // minutes
 		Dx.updater.val('title', formatted_date);
