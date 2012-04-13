@@ -6,44 +6,73 @@
 	<style type="text/css">
 		body { font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif; font-size: 14px; color: #fff; background: #000; margin: 0; }
 		h1,h2,h3,h4,h5,h6 { color: #fff; font-weight: normal; }
-		a { color: #ccc; text-decoration: none; font-weight: normal; }
+		a { color: #fff; text-decoration: none; font-weight: normal; }
 		a:hover { color: #fff; }
-		.align-right { text-align: right; }
-		.map { border-bottom: 1px dashed #444; padding: 5px 5px 10px 5px; margin: 0; }
-		.map_title { margin: 5px 0 5px 10px; }
-		.map_title span { color: #bbb; }
-		.host { display: inline-block; background: #333; border: 1px solid #555; border-bottom-width: 6px; border-radius: 5px; padding: 8px 10px; margin: 5px; }
-		.host h2 { margin: 0 0 5px 0; text-shadow: 1px 1px 0px #000; }
-		.host h2 a { visibility: hidden; }
-		.host h2:hover a { visibility: visible; }
-		.host.code-0 { background: #232; border-color: #151; box-shadow: 0px 0px 10px #262; }
-		.host.code-2 { background: #661; border-color: #882; box-shadow: 0px 0px 5px #882; }
-		.host.code-1 { background: #611; border-color: #822; box-shadow: 0px 0px 15px #822; }
-		.service { display: inline-block; padding: 2px 5px; margin: 2px 2px; background: #333; border: 1px solid #666; color: #fff; border-radius: 5px; font-weight: bold; }
-		.service.code-0 { background: #171; border-color: #3a3; color: #fff; }
-		.service.code-2 { background: #ff3; border-color: #ff6; color: #222; box-shadow: 0px 0px 5px #ff6; }
-		.service.code-1 { background: #f33; border-color: #f66; color: #fff; box-shadow: 0px 0px 5px #f66; }
-		#tooltip { position: fixed; top: 0; right: 20px; color: #888; background: #333; border: 1px solid #444;
-			border-top: none; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; overflow: hidden; }
-		#tooltip .wrap { padding: 10px 10px 5px 10px; }
+
+		body {
+			background: black;
+			color: #fff;
+			margin: 0;
+			line-height: 1.4;
+			padding: 140px 100px 40px 100px;
+			font-family: Helvetica, Arial, sans-serif;
+			font-size: 20px;
+			font-style: normal;
+			font-variant: normal;
+			font-weight: 100;
+			line-height: 1.25em;
+		}
+		.align_center { text-align: center; }
+		.title {
+			border-bottom: 1px solid #4D4D4D;
+			color: #fff;
+			text-transform: uppercase;
+			font-size: 80px;
+			font-weight: bold;
+			margin: 0;
+			text-align: center;
+			padding-bottom: 120px;
+		}
+
+		.body_red { background: #9f0b00; }
+		.body_red .title { border-color: #9f0b00; }
+		.body_red .circle { display: none; }
+		.body_yellow .circle { background: #ff6; }
+
+		#content { text-align: center; margin-top: 50px;}
+		.host, .service { display: none; }
+		.host { width: 100%; text-align: left; margin: 5px 0; }
+		.host h2 { width: 730px; text-align: right; float: left; margin: 0 20px 0 0; height: 30px; font-size: 20px; }
+		.host .service { line-height: 30px; }
+
+		.circle { width: 360px; height: 360px; border-radius: 180px; background: #37ac00; display: inline-block; margin-top: 30px; }
+		.circle_yellow { background: #ff6; }
+		.circle_red { background: #9f0b00; }
+
+		#tooltip { position: fixed; bottom: 0; left: 0; right: 0; color: #888; text-align: center; }
+		#tooltip .wrap { padding: 5px 0 0 0; }
 		#tooltip p { margin: 0; font-size: 12px; }
-		#tooltip .updater { font-weight: bold; color: #aaa; }
+		#tooltip .updater { font-weight: bold; color: #00BDFF; }
 		#tooltip.warning { background: #611; border-color: #822; box-shadow: 0px 0px 15px #822; color: #ddd; }
 		#tooltip.warning .updater { color: #fff; }
-		#tooltip .loader { height: 5px; background: #444; color: #444; overflow: hidden;
-			border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
+		#tooltip .loader { height: 5px; background: #333; color: #333; overflow: hidden; }
 		#tooltip.warning .loader { background: #822; color: #822; }
+
 		/* CSS3 Webkit Animations */
-		@-webkit-keyframes glow-service-1 { 0% { box-shadow: 0px 0px 5px #882; } 100% { box-shadow: 0px 0px 25px #882; } }
-		@-webkit-keyframes glow-service-2 { 0% { box-shadow: 0px 0px 5px #f66; } 100% { box-shadow: 0px 0px 25px #f66; } }
-		.code-1 { -webkit-animation-name: glow-service-1; -webkit-animation-duration: 1s; -webkit-animation-iteration-count: infinite; -webkit-animation-direction: alternate; -webkit-animation-timing-function: ease-in-out; }
-		.code-2 { -webkit-animation-name: glow-service-2;-webkit-animation-duration: 1s;-webkit-animation-iteration-count: infinite; -webkit-animation-direction: alternate; -webkit-animation-timing-function: ease-in-out;}
+		@-webkit-keyframes glow-yellow { 0% { box-shadow: 0px 0px 5px #ff6; } 100% { box-shadow: 0px 0px 100px 10px #ff6; } }
+		.body_yellow .circle { -webkit-animation-name: glow-yellow; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-direction: alternate; -webkit-animation-timing-function: ease-in-out; }
+
 	</style>
 </head>
-<body>
+<body class="body_green">
 
+<h1 class="title">Servers</h1>
+<div class="align_center">
+	<p>&nbsp;</p>
+	<div class="circle"></div>
+</div>
 <div id="content">
-	<p>No data available!</p>
+	<p style="color:#000;">No data available!</p>
 </div>
 <div id="tooltip" class="align-right">
 	<div class="wrap">
@@ -65,16 +94,14 @@
 	Dx.updater = $('#tooltip .updater'); // container for the update time
 	Dx.last_update = new Date(0);
 	$(function(){
-		updateData();
-		setInterval(updateData, Dx.REFRESH_RATE);
-		setInterval(increaseLoader, Dx.LOADER_RATE);
+		Dx.updateData();
+		//setInterval(Dx.updateData, Dx.REFRESH_RATE);
+		setInterval(Dx.increaseLoader, Dx.LOADER_RATE);
 	});
-	function parseData(data) {
+	Dx.parseData = function(data) {
 		var result = '';
 		$.each(data, function(map_key, map) {
 			if (map.groups.length) $.each(map.groups, function(group_key, group) {
-				result += '<div class="map">';
-				result += '<h1 class="map_title">'+map.name+'<span title="'+group.type+'"> - '+group.name+'</span></h1>';
 				if (group.hosts.length) $.each(group.hosts, function(host_key, host) {
 					result += '<div class="host code-'+host.code+'">';
 					result += '<h2>'+host.hostname+'</h2>';
@@ -87,30 +114,57 @@
 			});
 		});
 		return result;
-	}
-	function updateData() {
+	};
+	Dx.updateData = function() {
 		$.ajax({
 			url: '/',
 			headers: { "Accept": "application/json" },
 			dataType: 'json',
 			success: function (data) {
 				//console.log(data);
-				Dx.content.html(parseData(data.maps));
-				setLastUpdate(data.updated_at);
-				resetTimer();
+				Dx.content.html(Dx.parseData(data.maps));
+				Dx.setLastUpdate(data.updated_at);
+				Dx.showServices();
+				Dx.resetTimer();
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				console.log('Error: '+textStatus);
-				setLastUpdate(false);
-				resetTimer();
+				Dx.setLastUpdate(false);
+				Dx.resetTimer();
 			}
 		});
-	}
-	function setLastUpdate(unixtime) {
+	};
+	Dx.showServices = function() {
+		var error_red = false;
+		var error_yellow = false;
+		Dx.content.find('.code-1').each(function() {
+			error_red = true;
+			$(this).css('display', 'inline-block');
+			if ($(this).hasClass('service')) {
+				$(this).parent().css('display', 'inline-block');
+			}
+		});
+		Dx.content.find('.code-2').each(function() {
+			error_yellow = true;
+			$(this).css('display', 'inline-block');
+			if ($(this).hasClass('service')) {
+				$(this).parent().css('display', 'inline-block');
+			}
+		});
+		if (error_red) {
+			$('body').removeClass('body_green');
+			$('body').addClass('body_red');
+		} else if (error_yellow) {
+			$('body').removeClass('body_green');
+			$('body').addClass('body_yellow');
+		}
+	};
+
+	Dx.setLastUpdate = function(unixtime) {
 		if (unixtime) Dx.last_update = new Date(unixtime*1000);
-		var formatted_date = pad(Dx.last_update.getHours(), 2)+':'+pad(Dx.last_update.getMinutes(), 2)+':'+
-				pad(Dx.last_update.getSeconds(), 2)+', '+pad(Dx.last_update.getDate(), 2)+'.'+
-				pad((Dx.last_update.getMonth()+1), 2)+'.'+Dx.last_update.getFullYear();
+		var formatted_date = Dx.pad(Dx.last_update.getHours(), 2)+':'+Dx.pad(Dx.last_update.getMinutes(), 2)+':'+
+				Dx.pad(Dx.last_update.getSeconds(), 2)+', '+Dx.pad(Dx.last_update.getDate(), 2)+'.'+
+				Dx.pad((Dx.last_update.getMonth()+1), 2)+'.'+Dx.last_update.getFullYear();
 		var now = new Date();
 		var time_diff = now - Dx.last_update;
 		if (time_diff > Dx.MAX_TIME_DIFF) {
@@ -120,20 +174,20 @@
 		}
 		Dx.updater.html(Math.ceil(time_diff/1000/60)); // minutes
 		Dx.updater.val('title', formatted_date);
-	}
-	function increaseLoader() {
+	};
+	Dx.increaseLoader = function() {
 		if (Dx.loader.html().length < 1) Dx.loader.html(0);
 		Dx.loader.html(parseInt(Dx.loader.html())+1);
 		Dx.loader.css('width', Math.min(parseInt(Dx.loader.html()) * Dx.LOADER_RATE * 100 / Dx.REFRESH_RATE, 100) + '%' );
-	}
-	function resetTimer() {
+	};
+	Dx.resetTimer = function() {
 		Dx.loader.html(0);
-	}
-	function pad(num, size) {
+	};
+	Dx.pad = function(num, size) {
 		var s = num+"";
 		while (s.length < size) s = "0" + s;
 		return s;
-	}
+	};
 </script>
 </body>
 </html>
