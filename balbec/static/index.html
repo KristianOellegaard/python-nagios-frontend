@@ -95,7 +95,7 @@
 	Dx.last_update = new Date(0);
 	$(function(){
 		Dx.updateData();
-		//setInterval(Dx.updateData, Dx.REFRESH_RATE);
+		setInterval(Dx.updateData, Dx.REFRESH_RATE);
 		setInterval(Dx.increaseLoader, Dx.LOADER_RATE);
 	});
 	Dx.parseData = function(data) {
