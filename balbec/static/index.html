@@ -35,15 +35,18 @@
 		}
 
 		.body_red { background: #9f0b00; }
+		.body_red .monitor, .body_yellow .monitor { display: none; }
 		.body_red .title { border-color: #9f0b00; }
 		.body_red .circle { display: none; }
 		.body_yellow .circle { background: #ff6; }
 
 		#content { text-align: center; margin-top: 50px;}
 		.host, .service { display: none; }
-		.host { width: 100%; text-align: left; margin: 5px 0; }
-		.host h2 { width: 730px; text-align: right; float: left; margin: 0 20px 0 0; height: 30px; font-size: 20px; }
-		.host .service { line-height: 30px; }
+		.host { width: 100%; text-align: center; margin: 5px 0;  }
+		.host h2 { display: inline-block; margin: 0; height: 30px; float: left; font-size: 20px; width: 50%; text-align: right; padding: 7px 0; }
+		.host .service { float: left; margin-left: 10px; border: 3px solid #fff; border-radius: 5px; padding: 5px 15px; font-weight: bold;} 
+		
+		.monitor span { border: 3px solid #fff; border-radius: 5px; padding: 5px 15px; font-weight: bold;  }
 
 		.circle { width: 360px; height: 360px; border-radius: 180px; background: #37ac00; display: inline-block; margin-top: 30px; }
 		.circle_yellow { background: #ff6; }
@@ -89,6 +92,7 @@
 	Dx.LOADER_RATE = 100; // loader refresh rate (in milliseconds)
 	Dx.MAX_TIME_DIFF = 5 * 60 * 1000; // at what time difference should a warning be displayed (in milliseconds)
 	Dx.content = $('#content'); // container to be replaced with content
+	Dx.stats_content = $('#content .monitor'); // container to be replaced with statistics
 	Dx.tooltip = $('#tooltip'); // container that displays time related info
 	Dx.loader = $('#tooltip .loader'); // container for the loader
 	Dx.updater = $('#tooltip .updater'); // container for the update time
@@ -100,12 +104,16 @@
 	});
 	Dx.parseData = function(data) {
 		var result = '';
+		var number_services = 0;
+		var number_hosts = 0;
 		$.each(data, function(map_key, map) {
 			if (map.groups.length) $.each(map.groups, function(group_key, group) {
 				if (group.hosts.length) $.each(group.hosts, function(host_key, host) {
+					number_hosts += 1;
 					result += '<div class="host code-'+host.code+'">';
 					result += '<h2>'+host.hostname+'</h2>';
 					if (host.hostgroup.length) $.each(host.hostgroup, function(service_key, service) {
+						number_services += 1;
 						result += '<span class="service code-'+service.code+'" title="'+service.text+'">'+service.servicename+'</span>';
 					});
 					result += '</div>';
@@ -113,6 +121,7 @@
 				result += '</div>';
 			});
 		});
+		result += '<div class="monitor"><h2>Monitoring <span>' + number_hosts + ' hosts</span> and <span>' + number_services + ' services</span></h2></div>';
 		return result;
 	};
 	Dx.updateData = function() {
@@ -138,14 +147,14 @@
 		var error_red = false;
 		var error_yellow = false;
 		Dx.content.find('.code-1').each(function() {
-			error_red = true;
+			error_yellow = true;
 			$(this).css('display', 'inline-block');
 			if ($(this).hasClass('service')) {
 				$(this).parent().css('display', 'inline-block');
 			}
 		});
 		Dx.content.find('.code-2').each(function() {
-			error_yellow = true;
+			error_red = true;
 			$(this).css('display', 'inline-block');
 			if ($(this).hasClass('service')) {
 				$(this).parent().css('display', 'inline-block');
