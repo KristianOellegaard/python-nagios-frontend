@@ -19,7 +19,8 @@
 		.host, .service { display: none; }
 		.host { width: 100%; text-align: center; margin: 5px 0;  }
 		.host h2 { margin: 0; height: 30px; float: left; font-size: 20px; width: 50%; text-align: right; padding: 7px 0; }
-		.host .service { float: left; margin-left: 10px; border: 3px solid #fff; border-radius: 5px; padding: 5px 15px; font-weight: bold;} 
+		.host .service { float: left; margin-left: 10px; border: 3px solid #fff; border-radius: 5px; padding: 5px 15px; font-weight: bold;}
+		.host .filtered { opacity: 0.3; }
 		
 		.monitor span { padding: 5px 15px; font-weight: bold;  }
 
@@ -100,6 +101,9 @@
 <script>window.jQuery || document.write('<script src="/jquery.min.js"><\/script>')</script>
 <script type="text/javascript">
 	var Dx = {};
+	Dx.FILTERS = { // filters out services on the alternate screen
+		//'localhost': new Array('HTTP', 'Disk Space'),
+	};
 	Dx.REFRESH_RATE = 30 * 1000; // how often should the page check for updates (in milliseconds)
 	Dx.LOADER_RATE = 100; // loader refresh rate (in milliseconds)
 	Dx.MAX_TIME_DIFF = 5 * 60 * 1000; // at what time difference should a warning be displayed (in milliseconds)
@@ -161,11 +165,26 @@
 	Dx.showServices = function() {
 		var error_red = false;
 		var error_yellow = false;
-		Dx.content.find('.code-1').each(function() {
-			error_yellow = true;
-		});
-		Dx.content.find('.code-2').each(function() {
-			error_red = true;
+		Dx.content.find('.code-1, .code-2').each(function() {
+			var host = $(this).parent().find('h2').text();
+			var service = $(this).text();
+			if (host in Dx.FILTERS) {
+				if ($.inArray(service, Dx.FILTERS[host]) != -1) {
+					$(this).addClass('filtered');
+				} else {
+					if ($(this).hasClass('code-1')) {
+						error_yellow = true;
+					} else if ($(this).hasClass('code-2')) {
+						error_red = true;
+					}
+				}
+			} else {
+				if ($(this).hasClass('code-1')) {
+					error_yellow = true;
+				} else if ($(this).hasClass('code-2')) {
+					error_red = true;
+				}
+			}
 		});
 		if (error_red) {
 			$('body').removeClass('body_green body_yellow body_red');
